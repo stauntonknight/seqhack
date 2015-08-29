@@ -2,14 +2,18 @@ import sys
 
 import requests
 from Levenshtein import ratio
-from specializations import specialization
+from specializations import specializations
 
-service_end_point = 'http://b0a68fa7.ngrok.io/api/Services/getservice'
-discovery_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetApiDetails'
-keys = ['name', 'specilization']
-service_list = ["practo"]
-service_type_list = ["get_doctors"]
+service_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetServiceDetails/'
+discovery_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetApiDetails/'
+keys = ['name', 'specialization']
+service_list = {'practo': 'Practo'}
+service_type_list = {'search': 'search'}
 blacklist_words = set(["in", "from", "of"])
+
+param_corpus_dict = {
+    'specialization': specializations
+}
 
 
 def leveinstein_match(key, tokens):
@@ -19,12 +23,8 @@ def leveinstein_match(key, tokens):
 
 
 def make_request(service, service_type, params_dict):
-    return [{
-        'name': 'B.Kappur',
-        'specilization': 'Neurology'
-    }]
-    params_dict['serviceId'] = service
-    params_dict['serviceName'] = service_type
+    params_dict['serviceName'] = service
+    params_dict['apiName'] = service_type
     resp = requests.get(service_end_point, params=params_dict)
     return resp.json()
 
@@ -45,34 +45,34 @@ def main(sms):
     # sms formt CLIENT_CODE SERVICE PARAM1 PARAM2 ..
     tokens = set(sms.lower().split())
     tokens = tokens.difference(blacklist_words)
-    service = get_first_matching(service_list, tokens)
-    service_type = get_first_matching(service_type_list, tokens)
+    tokens = list(tokens)
+    service = get_first_matching(service_list.keys(), tokens)
+    service = service_list[service]
+    service_type = get_first_matching(service_type_list.keys(), tokens)
+    service_type = service_type_list[service_type]
 
-    # api_spec_req = requests.get(
-    #     discovery_end_point,
-    #     params={'serviceId': client_code, 'serviceName': call_name})
-    api_spec_req = ['specialization']  # remove this line
+    api_spec_req = requests.get(
+        discovery_end_point,
+        params={'serviceName': service, 'apiName': service_type}).json()
 
     avail_params = {}
     for api_param in api_spec_req:
-        avail_params[api_param] = get_first_matching(globals()[api_param],
-                                                     tokens)
+        if api_param in param_corpus_dict:
+            avail_params[api_param] = get_first_matching(
+                param_corpus_dict[api_param], tokens)
 
     if service is None or service_type is None:
         return ""
-    tokens = list(tokens)
 
-    for req_param in api_spec_req:
-        if req_param not in avail_params:
-            return ""
     resp = make_request(service, service_type, avail_params)
-    print avail_params
     return resp_to_text(resp)
 
 
 def resp_to_text(resp):
-    for item in resp:
-        resp_sms = ''
+    resp = resp['doctors']
+    keys = ['doctor_name', 'recommendation_percent', 'consultation_fees']
+    resp_sms = ''
+    for item in resp[:4]:
         for key in keys:
             if key in item:
                 resp_sms += key + ": " + str(item[key])

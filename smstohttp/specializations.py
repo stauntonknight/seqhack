@@ -1,4 +1,4 @@
-specialization = set([
+specializations = set([
 	"Dentist",
     "General Physician",
     "Ayurveda",
