@@ -2,6 +2,7 @@
 	<head>
 		<title> Add new API </title>
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+		<link href="add_page.css" rel="stylesheet">
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 	</head>
@@ -10,17 +11,25 @@
 			<div class="form-group" data-toggle="validator">
 				<label for="provider">Provider</label>
 				<input type="text" class="form-control" rows="5" id="provider" placeholder="Provider" required />
+
+				<label for="provider">API Base URL</label>
+				<input type="text" class="form-control" rows="5" id="apibaseurl" placeholder="Base URI" required />
 			</div>
-			<a href="#" class="btn btn-info btn-lg" id="addAPI">Add API</a>
-			<div id="apiinfo">
+			<a href="#" class="btn btn-info btn-sm" id="addAPI">Add API</a>
+			<div id="apiinfo" class="outline">
 			</div>
 			<script id="hidden-template" type="text/x-custom-template">
-				<div data-toggle="validator" class="apidetail">	
+				<div data-toggle="validator" class="apidetail" class="outline">	
 					<label>Api Name</label>
 					<input type="text" class="apiname" placeholder="Api Name" required />
-					<div class="paraminfo">
-						<a href="#" class="btn btn-info btn-lg addParam">Add Param</a>
+					<input type="text" class="apiurl" placeholder="Api Relative resource" required />
+					<div class="paraminfo outline">
+						<a href="#" class="btn btn-info btn-sm addParam">Add Param</a>
 						<div class="params"></div>
+					</div>
+					<div class="headerinfo outline">
+						<a href="#" class="btn btn-info btn-sm addHeader">Add Header</a>
+						<div class="headers"></div>
 					</div>
 				</div>
 			</script>
@@ -30,7 +39,22 @@
 					<input data-toggle="validator" class="paramval" required />
 				</div>
 			</script>
-			<button type="submit" class="btn btn-info btn-lg">Submit</button>
+			<script id="hidden-template-param" type="text/x-custom-template">
+				<div class="paramentry">
+					<label>Param</label>
+					<input data-toggle="validator" class="paramval" required />
+				</div>
+			</script>
+			<script id="hidden-template-header" type="text/x-custom-template">
+				<div class="headerentry">
+					<label>Header</label>
+					<input data-toggle="validator" class="headertxt" required />
+					<input data-toggle="validator" class="headerval" required />
+				</div>
+			</script>
+
+
+			<button type="submit" class="btn btn-info btn-sm">Submit</button>
 			<script src="add_page.js"  type="text/javascript"></script>
 		</form>
 	</body>
