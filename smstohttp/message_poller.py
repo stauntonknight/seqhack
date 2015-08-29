@@ -40,7 +40,7 @@ def get_messages():
                     try:
                         print time.time() - 19800
                         print each_res["received_at"]
-                        if time.time() - each_res["received_at"] - 43200> 420:
+                        if time.time() - each_res["received_at"] - 43200> 60:
                             continue
                         print each_res
                         print "Qyering server"

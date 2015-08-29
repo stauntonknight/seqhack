@@ -54,8 +54,12 @@ def main(sms):
     tokens = tokens.difference(blacklist_words)
     tokens = list(tokens)
     service = get_first_matching(service_list.keys(), tokens)
+    if service is None:
+        return ''
     service = service_list[service]
     service_type = get_first_matching(service_type_list.keys(), tokens)
+    if service_type is None:
+        return ''
     service_type = service_type_list[service_type]
 
     api_spec_req = requests.get(
