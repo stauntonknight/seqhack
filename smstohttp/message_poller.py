@@ -29,13 +29,17 @@ def get_messages():
         if res["success"]:
             for each_res in res["result"]:
                 if each_res["status"] == "received":
-					if time.time() - each_res["received_at"] > 60:
-						continue
-                    message = smstohttp.main(each_res["message"])
-                    if len(message) > 0:
-                        send_message(message, each_res["number"])
-                    else
-                        send_message("Sorry, we could not find any results :(", each_res["number"])
+					try:
+						if time.time() - each_res["received_at"] > 60:
+							continue
+						message = smstohttp.main(each_res["message"])
+						if len(message) > 0:
+							send_message(message, each_res["number"])
+						else
+							send_message("Sorry, we could not find any results :(", each_res["number"])
+					except as e:
+						print "Error in handling"
+						print e
                     
 
     except requests.exceptions.RequestException as e:
