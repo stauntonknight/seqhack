@@ -1,6 +1,6 @@
 import sys
 import requests
-import specializations
+from specializations import specializations
 
 service_end_point = 'http://b0a68fa7.ngrok.io/api/Services/getservice'
 discovery_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetApiDetails'

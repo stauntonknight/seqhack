@@ -1,5 +1,5 @@
-specializations = set(
+specializations = set([
 		"gasoenterologist",
 		"orthopaedist",
 		"optician"
-)
+])
