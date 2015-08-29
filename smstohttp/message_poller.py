@@ -19,7 +19,8 @@ def send_message(message, number):
         ])
     response = requests.get('http://smsgateway.me/api/v3/messages/send',
             params=urlencode(params)).content
-    print response 
+    print response
+
 
 def get_messages():
     params = OrderedDict([('email', user_name), ('password', password)])
@@ -29,18 +30,18 @@ def get_messages():
         if res["success"]:
             for each_res in res["result"]:
                 if each_res["status"] == "received":
-					try:
-						if time.time() - each_res["received_at"] > 60:
-							continue
-						message = smstohttp.main(each_res["message"])
-						if len(message) > 0:
-							send_message(message, each_res["number"])
-						else
-							send_message("Sorry, we could not find any results :(", each_res["number"])
-					except as e:
-						print "Error in handling"
-						print e
-                    
+                    try:
+                        if time.time() - each_res["received_at"] > 60:
+                            continue
+                        message = smstohttp.main(each_res["message"])
+                        if len(message) > 0:
+                            send_message(message, each_res["number"])
+                        else:
+                            send_message("Sorry, we could not find any results :(", each_res["number"])
+                    except Exception as e:
+                        print "Error in handling"
+                        print e
+
 
     except requests.exceptions.RequestException as e:
         print e

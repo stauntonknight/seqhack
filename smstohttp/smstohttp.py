@@ -1,18 +1,21 @@
 import sys
+import urllib
 
 import requests
 from Levenshtein import ratio
 from specializations import specializations
+from localities import localities
 
-service_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetServiceDetails/'
-discovery_end_point = 'http://b0a68fa7.ngrok.io/api/Services/GetApiDetails/'
+service_end_point = 'http://e2630397.ngrok.io/api/Services/GetServiceDetails/'
+discovery_end_point = 'http://e2630397.ngrok.io/api/Services/GetApiDetails/'
 keys = ['name', 'specialization']
 service_list = {'practo': 'Practo'}
 service_type_list = {'search': 'search'}
 blacklist_words = set(["in", "from", "of"])
 
 param_corpus_dict = {
-    'specialization': specializations
+    'speciality': specializations,
+    'locality': localities
 }
 
 
@@ -23,9 +26,12 @@ def leveinstein_match(key, tokens):
 
 
 def make_request(service, service_type, params_dict):
-    params_dict['serviceName'] = service
-    params_dict['apiName'] = service_type
-    resp = requests.get(service_end_point, params=params_dict)
+    query_dict = {}
+    query_dict['serviceName'] = service
+    query_dict['apiName'] = service_type
+    query_dict['parameters'] = urllib.urlencode(params_dict)
+    resp = requests.get(service_end_point, params=query_dict)
+    print params_dict
     return resp.json()
 
 
@@ -43,6 +49,7 @@ def get_first_matching(superset, tokens):
 
 def main(sms):
     # sms formt CLIENT_CODE SERVICE PARAM1 PARAM2 ..
+    print sms
     tokens = set(sms.lower().split())
     tokens = tokens.difference(blacklist_words)
     tokens = list(tokens)
@@ -53,13 +60,19 @@ def main(sms):
 
     api_spec_req = requests.get(
         discovery_end_point,
-        params={'serviceName': service, 'apiName': service_type}).json()
+        params={'serviceName': service, 'apiName': service_type})
+    print api_spec_req.raw.read()
+    print api_spec_req
+    api_spec_req = api_spec_req.json()
 
     avail_params = {}
     for api_param in api_spec_req:
         if api_param in param_corpus_dict:
             avail_params[api_param] = get_first_matching(
                 param_corpus_dict[api_param], tokens)
+
+    if 'city' in api_spec_req:
+        avail_params['city'] = 'Bangalore'
 
     if service is None or service_type is None:
         return ""
@@ -69,6 +82,8 @@ def main(sms):
 
 
 def resp_to_text(resp):
+    if 'doctors' not in resp:
+        return ''
     resp = resp['doctors']
     keys = ['doctor_name', 'recommendation_percent', 'consultation_fees']
     resp_sms = ''
