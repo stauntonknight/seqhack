@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js" ></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					$('#submit').click(function() {
+						var query = $('#query').val();
+						$.get('/getSuggestions',
+							{
+							  'q': query
+							},
+							function(res) {
+								$('#response').text(res);
+							}
+						);
+				    });
+		    });
+		</script>
+	</head>
+	<body>
+		<textarea id="query" rows="20" cols="20"></textarea>
+		<input id="submit" type="button">Submit</input>
+	</body>
+</html>
