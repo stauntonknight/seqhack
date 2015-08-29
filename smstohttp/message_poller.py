@@ -32,6 +32,8 @@ def get_messages():
                     message = smstohttp.main(each_res["message"])
                     if len(message) > 0:
                         send_message(message, each_res["number"])
+                    else
+                        send_message("Sorry, we could not find any results :(", each_res["number"])
                     
 
     except requests.exceptions.RequestException as e:

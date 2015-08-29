@@ -10,17 +10,13 @@ service_type_list = ["get_doctors"]
 blacklist_words = set(["in", "from", "of"])
 
 
-def make_request(client_code, call_name, query_params, api_spec):
-    """
-    api_spec = [param1, param2, param3]
-    """
+def make_request(service, service_type, params_dict):
     return [{
         'name': 'B.Kappur',
         'specilization': 'Neurology'
     }]
-    params_dict = dict(zip(api_spec, query_params))
-    params_dict['serviceId'] = client_code
-    params_dict['serviceName'] = call_name
+    params_dict['serviceId'] = service 
+    params_dict['serviceName'] = service_type 
     resp = requests.get(service_end_point, params=params_dict)
     return resp.json()
 
@@ -28,29 +24,36 @@ def make_request(client_code, call_name, query_params, api_spec):
 def get_first_matching(superset, param):
     slist = None
     for sl in superset:
-        if (sl in param):
+        if (sl.lower() in param):
             slist = sl
+            param.remove(slist)
             break
     return slist
 
 def main(sms):
     # sms formt CLIENT_CODE SERVICE PARAM1 PARAM2 ..
-    query_params = set(sms.split())
+    query_params = set(sms.lower().split())
     query_params = query_params.difference(blacklist_words)
     service = get_first_matching(service_list, query_params)
     service_type = get_first_matching(service_type_list, query_params)
-    service_type = get_first_matching(service_type_list, query_params)
+
+    avail_params = {}
+    # ADD NEW PARAMS HERE.
+    avail_params["specialization"] = get_first_matching(specializations, query_params)
+
     if service == None or service_type == None:
         return ""
-    query_params.remove(service)
     query_params.remove(service_type)
     query_params = list(query_params)
 
-    # api_spec = requests.get(
+    # api_spec_req = requests.get(
     #     discovery_end_point,
     #     params={'serviceId': client_code, 'serviceName': call_name})
-    api_spec = []
-    resp = make_request(service, service_type, query_params, api_spec)
+    api_spec_req = []
+    for req_param in api_specs_req:
+        if req_param not in avail_params:
+            return ""
+    resp = make_request(service, service_type, avail_params)
     for item in resp:
         resp_sms = ''
         for key in keys:
