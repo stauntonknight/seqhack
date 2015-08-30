@@ -91,10 +91,10 @@ def resp_to_text(resp):
     resp = resp['doctors']
     keys = ['doctor_name', 'recommendation_percent', 'consultation_fees']
     resp_sms = ''
-    for item in resp[:4]:
+    for item in resp[:3]:
         for key in keys:
             if key in item:
-                resp_sms += key + ": " + str(item[key])
+                resp_sms += key.replace('_', ' ').title() + ": " + str(item[key])
                 resp_sms += "\n"
         resp_sms += "\n"
     return resp_sms
