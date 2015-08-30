@@ -1,7 +1,9 @@
 function delet(serviceName) {
 	$.get('http://5bcafef9.ngrok.io/api/services/deleteservice', {
 			'serviceName': serviceName
-			}, window.reload);
+			}, function() {
+				window.reload();
+			});
 }
 
 $(document).ready(function() {
@@ -10,8 +12,9 @@ $(document).ready(function() {
 			var $el = $($('#hidden-template-servicename').html());	
 			$('#container').append($el);
 			$el.find(".servicename").text(serviceNames[i]);
+			var t = serviceNames[i];
 			$el.find(".delete").click(function() {
-				delet(serviceNames[i]);
+				delet(t);
 			});
 		}
 	});
