@@ -94,7 +94,7 @@ def resp_to_text(resp):
     for item in resp[:4]:
         for key in keys:
             if key in item:
-                resp_sms += key + ": " + str(item[key])
+                resp_sms += key.replace('_', ' ').title() + ": " + str(item[key])
                 resp_sms += "\n"
         resp_sms += "\n"
     return resp_sms
