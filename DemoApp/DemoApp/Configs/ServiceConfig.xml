@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfig>
+  <Service Id="1" Name="Practo" Url="https://api.practo.com">
+    <Api Name="doctorProfile" Url="/doctors?">
+      <Parameters>id</Parameters>
+      <Parameters>with_relations</Parameters>
+    </Api>
+    <Api Name="practices" Url="/practices?">
+      <Parameters>id</Parameters>
+      <Parameters>with_doctors</Parameters>
+    </Api>
+    <Api Name="search" Url="/search?">
+      <Parameters>city</Parameters>
+      <Parameters>locality</Parameters>
+      <Parameters>speciality</Parameters>
+      <Parameters>filters</Parameters>
+    </Api>
+  </Service>
+
+  <Service Id="3" Name="Google" Url="https://maps.googleapis.com/maps/api/place/?key=AIzaSyDQT4UfphqtqYYYxGRsUjChUK6GeUDmLfY">
+    <Api Name="nearbySearch" Url="nearbysearch/json">
+      <Parameters>location</Parameters>
+      <Parameters>radius</Parameters>
+      <Parameters>types</Parameters>
+      <Parameters>name</Parameters>      
+    </Api>
+  </Service>
+  
+  <ApiKeys>
+    <Key name="Practo">
+      <X-CLIENT-ID>e35afaf5-ff2d-4f66-b735-7d7b89604843</X-CLIENT-ID>
+       <X-API-KEY>mHdhUVBar2TTquzJklpcmUwJ5Oo=</X-API-KEY>
+    </Key>
+    <Key name="Zomato">
+      <ClientId>e35afaf5-ff2d-4f66-b735-7d7b89604843</ClientId>
+      <Token>mHdhUVBar2TTquzJklpcmUwJ5Oo</Token>
+    </Key>
+    <Key>
+      <h>h1</h>
+    </Key>
+    <Key>
+      <h>h1</h>
+    </Key>
+    <Key>
+      <H1>Header 1</H1>
+      <H2>Header 2</H2>
+    </Key>
+  </ApiKeys>
+</ServiceConfig>

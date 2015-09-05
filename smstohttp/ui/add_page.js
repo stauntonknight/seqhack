@@ -19,24 +19,24 @@ $('#container').submit(function(e) {
 		var api = {};
 		api['name'] = $(this).find(".apiname").val()
 		api['resourceUrl'] = $(this).find(".apiurl").val()
-		api['params'] = [];
+		api['parameters'] = [];
 		$(this).find(".paramval").each(function() {
-			api['params'].push($(this).val());
+		    api['parameters'].push($(this).val());
 		});
 		apis.push(api);
 	});
-	apis['headers'] = [];
-	$(this).find(".headerentry").each(function() {
-		var header = {};
-		headerKey = $(this).find('.headertxt').val()
-		headerVal = $(this).find('.headerval').val()
-		header[headerKey] = headerVal;
-		apis['headers'].push(header);
-    });
 	var service = {};
+	service['headers'] = {};
+	$(this).find(".headerentry").each(function() {
+				headerKey = $(this).find('.headertxt').val()
+		headerVal = $(this).find('.headerval').val()
+		service['headers'][headerKey] = headerVal;
+    });
+	
 	service['provider'] = provider;
 	service['endpoint'] = $('#apibaseurl').val();
-	$.post('/addapi', service);
+	service['apis'] = apis;
+	$.post('http://localhost:50467/api/Services/AddApi', service);
 	e.preventDefault();
 });
 
